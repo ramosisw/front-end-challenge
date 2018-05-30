@@ -1,0 +1,50 @@
+@import "root";
+@import "Components/Header";
+
+/**
+Import fonts
+ */
+@font-face {
+  font-family: "DINPro-light";
+  src: url("/dist/assets/fonts/DINPro-Light.otf");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DINPro-regular";
+  src: url("/dist/assets/fonts/DINPro-Regular.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DINPro-medium";
+  src: url("/dist/assets/fonts/DINPro-Medium.otf");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/**
+rewrite bootstrap theme
+ */
+body {
+  font-family: "DINPro-light", sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-primary);
+}
+
+a {
+  color: var(--color-primary);
+  height: 66px;
+}
+
+a:hover,
+a:focus {
+  color: var(--color-primary-light);
+}
+
+a:visited {
+  color: var(--color-primary);
+}

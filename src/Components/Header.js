@@ -6,7 +6,6 @@ import {
     Navbar,
     NavbarBrand,
     NavItem,
-    NavDropdown,
     NavLink
 } from "reactstrap";
 
@@ -39,7 +38,7 @@ class Header extends Component {
 
     render() {
         return (
-            <Navbar color="dark" dark expand="md">
+            <Navbar expand="md">
                 <NavbarBrand href="//bitso.com">
                     <img src={logo} alt="bitso" className="logo"/> | EXCHANGE
                 </NavbarBrand>
