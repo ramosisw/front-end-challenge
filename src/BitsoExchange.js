@@ -4,7 +4,8 @@ import "../Assets/Fonts/DINPro-Medium.otf";
 import "../Assets/Fonts/DINPro-Regular.otf";
 
 import Header from "./Components/Header";
-class App extends Component {
+
+class BitsoExchange extends Component {
     render() {
         return (
             <Header/>
@@ -12,4 +13,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default BitsoExchange;

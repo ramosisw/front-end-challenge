@@ -3,21 +3,21 @@
 ![Front End Challenge Image](https://github.com/bitsoex/front-end-challenge/blob/master/bann_bfec.jpg)
 
 ## SOBRE BITSO
-Bitso es el exchange de crypto más importante y grande de México. Este posicionamiento lo hemos logrado gracias
+BitsoExchange es el exchange de crypto más importante y grande de México. Este posicionamiento lo hemos logrado gracias
 a la tecnología que nuestro equipo de ingeniería ha construido. El reto y la misión que tenemos como empresa
 crece cada día y siempre estamos buscando al mejor talento de nuestro país.
 
 Para seguir creciendo necesitamos encontrar a los mejores programadores de Front End de México que nos ayuden
 a construir mejores gráficas, más herramientas de trading, y proveer una mejor experiencia de usuario a los
-cientos de miles de clientes de Bitso.
+cientos de miles de clientes de BitsoExchange.
 
-Ser parte de Bitso significa tener un impacto inmediato en el creciente ecosistema de crypto en México y Latinoamérica,  
-construir  productos  dirigidos  a  millones  de  usuarios,  trabajar  directamente  con  los  fundadores  de  Bitso,  
+Ser parte de BitsoExchange significa tener un impacto inmediato en el creciente ecosistema de crypto en México y Latinoamérica,  
+construir  productos  dirigidos  a  millones  de  usuarios,  trabajar  directamente  con  los  fundadores  de  BitsoExchange,  
 colaborar con un equipo de diseño UX de primer nivel y contribuir con tu código a uno de los mejores equipos de
 ingeniería en México.
 
 Los mejores participantes en este Coding Challenge tendrán oportunidad de entrevistarse para formar parte del
-equipo  de  Bitso  y  aparte  tenemos  premios  bastante  jugosos.  Así  que  es  que  es  momento  que  demuestres  que  
+equipo  de  BitsoExchange  y  aparte  tenemos  premios  bastante  jugosos.  Así  que  es  que  es  momento  que  demuestres  que  
 eres el mejor.   
 
 ## LOS PREMIOS
@@ -29,7 +29,7 @@ eres el mejor.
 1. Haz un fork del siguiente repositorio: https://github.com/bitsoex/front-end-challenge. En él encontrarás
    todos los recursos necesarios.
 2.   Tendrás que programar un proyecto traduciendo los diseños en un código robusto, funcional, legible y fácil de mantener.  
-3. Tendrás que usar el [API de Bitso](https://bitso.com/api_info).
+3. Tendrás que usar el [API de BitsoExchange](https://bitso.com/api_info).
 4. Deberás de usar las siguientes tecnologías obligatoriamente: HTML5, CSS3/Less, JavaScript y React.
 Otras tecnologías están totalmente permitidas, siempre y cuando las justifiques (como pre-procesadores, linters, manejadores de paquetes, etc).
 5. Tendrás hacer contribuciónes regulares a tu código a partir del momento de que haces tu fork.
@@ -37,7 +37,7 @@ Otras tecnologías están totalmente permitidas, siempre y cuando las justifique
 7. Incluye instrucciones claras de como correr tu proyecto en el README.
 
 ## PROCESO Y CRITERIOS DE EVALUACIÓN
-En Bitso creemos en la igualdad de oportunidades, por lo que para eliminar posibles sesgos durante el proceso de
+En BitsoExchange creemos en la igualdad de oportunidades, por lo que para eliminar posibles sesgos durante el proceso de
 selección y asegurar un proceso justo para todos los participantes, al momento de evaluar las propuestas eliminamos todos
 los identificadores personales y nos enfocamos 100% en evaluar el código y la solución con base en los
 siguientes criterios:
@@ -74,7 +74,7 @@ siguientes criterios:
 
 Recuerda seguir todas las instrucciones ya que evaluaremos minuciosamente todos los puntos.
 
-Es momento que seas parte de Bitso y nos ayudes a transformar el mundo.
+Es momento que seas parte de BitsoExchange y nos ayudes a transformar el mundo.
 
 Disfruta el challenge.
 
