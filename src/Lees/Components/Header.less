@@ -1,4 +1,4 @@
-.navbar {
+.navbar-dark {
   background-color: var(--primary);
   color: var(--color-primary);
 }
@@ -25,30 +25,87 @@ nav .logo-divider, .menu-divider {
   border-color: var(--color-primary);
 }
 
+.navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
+  background-color: var(--primary-accent);
+}
+
+.navbar-dark .navbar-nav .dropdown-menu {
+  background-color: var(--primary);
+  border-radius: 0px;
+}
+
 nav .logo-divider {
   height: var(--font-size-apparment);
   margin-top: 2px;
 }
 
 nav .menu-divider {
-  height: 24px;
-  margin-top: 8px;
+  height: 22px;
+  margin-top: 15px;
 }
 
-nav .nav-item {
-  padding-left: 10px;
+nav .nav-item a {
+  padding: 10px 20px;
   vertical-align: middle;
-  line-height: 24px;
+  line-height: 20px;
 }
 
-nav .user-profile-photo {
-  height: 42px;
-  width: 42px;
-}
-
-nav .img-thumbnail {
+.nav .img-thumbnail {
   padding: 2px;
-  margin-right: 10px;
   border-color: var(--primary-accent);
   background-color: var(--primary);
+  &.user-profile-photo {
+    height: 47px;
+    width: 47px;
+    margin-left: 20px;
+    margin-right: 10px;
+  }
+}
+
+.navbar-expand-md .navbar-nav .nav-link {
+  position: relative;
+  display: block;
+  padding: 15px 20px;
+  &.menu-profile {
+    padding: 15px 10px;
+  }
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.nav .dropdown.open .caret {
+  border-top: none;
+  border-bottom: 4px solid #000000;
+}
+
+.navbar-dark .dropdown-toggle::after {
+  background-image: url("../../../Assets/Images/SVG/downarrow_white.svg");
+  position: relative;
+  top: 8px;
+  display: block;
+  overflow: hidden;
+  background-position: right top;
+  background-repeat: no-repeat;
+  width: 10px !important;
+  height: 7px !important;
+  text-indent: 100%;
+  white-space: nowrap;
+  border: 0;
+  padding-left: 20px;
+  float: right;
+}
+
+.navbar-nav .dropdown:hover .dropdown-menu {
+  padding: 0 0;
+  margin: 0 0;
+  border: 0;
+}
+
+.dropdown-divider {
+  width: 80%;
+  border-top: 1px solid;
+  border-color: var(--color-primary);
+  margin: auto;
 }

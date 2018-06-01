@@ -3,7 +3,9 @@ const webpack = require("webpack");
 const bundlePath = path.resolve(__dirname, "dist/");
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: {
+        index: "./src/index.js"
+    },
     module: {
         rules: [{
             test: /\.(js|jsx)$/,
@@ -51,12 +53,13 @@ module.exports = {
     resolve: {extensions: ['*', '.js', '.jsx']},
     output: {
         publicPath: bundlePath,
-        filename: "bundle.js"
+        filename: "[name].bundle.js"
     },
     devServer: {
         contentBase: path.join(__dirname, 'public'),
         port: 3000,
         publicPath: "http://localhost:3000/dist"
     },
-    plugins: [new webpack.HotModuleReplacementPlugin()]
+    plugins: [new webpack.HotModuleReplacementPlugin()],
+    performance: false
 };
