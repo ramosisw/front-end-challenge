@@ -25,6 +25,11 @@ nav .logo-divider, .menu-divider {
   border-color: var(--color-primary);
 }
 
+nav .logo-divider {
+  height: var(--font-size-apparment);
+  margin: 2px 0px 0px 0px;
+}
+
 .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
   background-color: var(--primary-accent);
 }
@@ -32,11 +37,6 @@ nav .logo-divider, .menu-divider {
 .navbar-dark .navbar-nav .dropdown-menu {
   background-color: var(--primary);
   border-radius: 0px;
-}
-
-nav .logo-divider {
-  height: var(--font-size-apparment);
-  margin-top: 2px;
 }
 
 nav .menu-divider {
@@ -66,9 +66,13 @@ nav .nav-item a {
   position: relative;
   display: block;
   padding: 15px 20px;
-  &.menu-profile {
+  & .menu-profile {
     padding: 15px 10px;
   }
+}
+
+.navbar-expand-md .navbar-nav a.nav-link {
+  font-size: var(--font-size-normal);
 }
 
 .dropdown:hover .dropdown-menu {
