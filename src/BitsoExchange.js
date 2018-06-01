@@ -4,11 +4,15 @@ import "../Assets/Fonts/DINPro-Medium.otf";
 import "../Assets/Fonts/DINPro-Regular.otf";
 
 import Header from "./Components/Header";
+import Summary from "./Components/Summary";
 
 class BitsoExchange extends Component {
     render() {
         return (
-            <Header/>
+            <div className="App">
+                <Header/>
+                <Summary/>
+            </div>
         );
     }
 }
