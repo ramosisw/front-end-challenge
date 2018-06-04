@@ -1,6 +1,8 @@
 import React from 'react';
 import LastTrades from '../../src/Components/LastTrades';
 import renderer from 'react-test-renderer';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 
 console.error = jest.fn();
 const componentName = "LastTrades ";
@@ -520,6 +522,92 @@ test(componentName + 'Slice on over than 50 Trades', () => {
     }];
     const component = renderer.create(
         <LastTrades book={"btc_mxn"} trades={_60Trades}/>
+    )
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+});
+
+test(componentName + 'Request to Bitso API', () => {
+    var mock = new MockAdapter(axios);
+    const _10Trades = {
+        success: true,
+        payload: [{
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:01+0000",
+            "amount": "0.01020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:02+0000",
+            "amount": "0.02020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:03+0000",
+            "amount": "0.03020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:04+0000",
+            "amount": "0.04020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:05+0000",
+            "amount": "0.05020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:06+0000",
+            "amount": "0.06020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:07+0000",
+            "amount": "0.07020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:08+0000",
+            "amount": "0.08020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:09+0000",
+            "amount": "0.09020640",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }, {
+            "book": "btc_mxn",
+            "created_at": "2018-06-03T18:59:10+0000",
+            "amount": "0.01002060",
+            "maker_side": "sell",
+            "price": "154097.40",
+            "tid": 7693079
+        }]
+    };
+    mock.onGet('https://api.bitso.com/v3/trades/', {
+        params: {book: "btc_mxn", sort: "desc", limit: 100}
+    }).reply(200, _10Trades);
+    const component = renderer.create(
+        <LastTrades book={"btc_mxn"} trades={[]}/>
     )
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
