@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development",
     "host": "webpack-dev-server --mode development --inline --host 192.168.12.12 --content-base .",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "gitdoc": "webpack --mode production --config webpack.gitdoc.js"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
     "style-loader": "^0.21.0",
     "webpack": "^4.10.2",
     "webpack-cli": "^3.0.1",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.2"
   }
 }
