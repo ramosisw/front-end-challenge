@@ -10,8 +10,6 @@ import moment from "moment";
 class LastTrades extends Component {
     constructor(props) {
         super(props);
-        console.log("LastTrades Props:")
-        console.log(props);
         this.state = {
             book: this.props.book,
             trades: []
@@ -38,8 +36,9 @@ class LastTrades extends Component {
      * @returns {*}
      */
     render() {
-        let flash = true;
         const {book, trades} = this.props;
+        if (!trades || !book) return "";
+        let flash = true;
         for (let trade of trades) {
             /*TradeResponse[{"i":7693045,"a":"0.00099991","r":"153697.55","v":"153.68371722","mo":"CyQQFbmz7GhBbsbI","to":"aJZUXFxbvzAV1MIE","t":0}]*/
             this.state.trades.unshift({
