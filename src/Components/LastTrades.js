@@ -19,7 +19,7 @@ class LastTrades extends Component {
 
     getTrades() {
         const _this = this;
-        axios.get("https://api.bitso.com/v3/trades/", {
+        return axios.get("https://api.bitso.com/v3/trades/", {
             params: {book: _this.state.book, sort: "desc", limit: 100}
         }).then(message => {
             if (!message.data && !message.data.success) return;
