@@ -1,29 +1,30 @@
 .sub-nav {
+  border-bottom: 1px solid;
+  border-color: var(--primary);
   background-color: var(--primary-light);
-}
-
-.sub-nav .nav > .nav-item a {
-  padding: 5px 10px;
-  color: var(--green);
-  font-size: var(--font-size-normal);
-  text-transform: uppercase;
-}
-
-.sub-nav {
+  margin-bottom: 10px;
+  .nav > .nav-item a {
+    padding: 5px 10px;
+    color: var(--green);
+    font-size: var(--font-size-book);
+    text-transform: uppercase;
+  }
   .row {
     margin-right: auto;
     margin-left: 20px;
   }
   p {
-    margin: 0px;
-    margin-left: 10px;
+    margin: 0px 0px 0px 10px;
     color: var(--color-primary-accent);
     float: left;
     display: inline-block;
-    font-size: var(--font-size-small  );
+    font-size: var(--font-size-titles);
     .currency, .percent, .value {
       margin-left: 5px;
       color: var(--color-primary);
     }
+  }
+  .dropdown-menu {
+    background-color: var(--primary-light) !important;
   }
 }

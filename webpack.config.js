@@ -4,6 +4,7 @@ const bundlePath = path.resolve(__dirname, "dist/");
 
 module.exports = {
     entry: {
+        babel: "babel-polyfill",
         index: "./src/index.js"
     },
     module: {

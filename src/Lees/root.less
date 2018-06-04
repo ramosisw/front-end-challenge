@@ -1,7 +1,35 @@
 :root {
+
   /**
   Colors
    */
+  --dark-green: #466830;
+  --medium-green: #86af6b;
+  --regular-green: #80c156;
+  --light-green: #98d372;
+  /*——————————————————————*/
+  --dark-red: #722837;
+  --regular-red: #cc4458;
+  --medium-red: #ba3040;
+  /*——————————————————————*/
+  --dark-navy: #161a1e;
+  --background-navy: #191e23;
+  --regular-navy: #252c36;
+  --medium-navy: #384555;
+  --navy-headers: #313d4c;
+  /*——————————————————————*/
+  --dark-text: #4e5863;
+  --light-text: #b0bac1;
+  /*——————————————————————*/
+  --sidebar-background: #23292d;
+  --sidebar: #2e353d;
+  --sidebar-header: #727c84;
+  --sidebar-text: #747f89;
+  --sidebar-light-text: #b0bac1;
+  /*——————————————————————*/
+  --neutral-gray: #cccccc;
+  --bitcoin-yellow: #ebc256;
+
   --primary: #252C36;
   --primary-dark: #191E23;
   --primary-light: #161A1E;
@@ -21,4 +49,63 @@
   --font-size-book: 1.285714286rem; //18px
 
   --green: #80C156;
+}
+
+/**
+Import fonts
+ */
+@font-face {
+  font-family: "DINPro-light";
+  src: url("../../Assets/Fonts/DINPro-Light.otf");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DINPro-regular";
+  src: url("../../Assets/Fonts/DINPro-Regular.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DINPro-medium";
+  src: url("../../Assets/Fonts/DINPro-Medium.otf");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/**
+rewrite bootstrap theme
+ */
+body {
+  font-family: "DINPro-light", sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-primary);
+}
+
+a {
+  color: var(--color-primary);
+  &:hover, :focus {
+    color: var(--color-primary);
+  }
+  &:visited {
+    color: var(--color-primary);
+  }
+}
+
+#root {
+  background-color: var(--primary-dark);
+  min-height: 860px;
+}
+
+.table-header {
+  background-color: var(--primary-accent);
+  h2 {
+    text-transform: uppercase;
+    padding: 10px;
+    font-size: var(--font-size-normal);
+    margin-bottom: 0px;
+  }
 }

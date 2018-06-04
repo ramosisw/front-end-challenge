@@ -1,19 +1,15 @@
 import React, {Component} from "react";
-import {
-    Container,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Nav,
-    Navbar,
-    NavbarBrand,
-    NavbarToggler,
-    NavItem,
-    NavLink
-} from "reactstrap";
+import PropTypes from "prop-types";
 
+import {Container, Dropdown, DropdownMenu, DropdownToggle, Nav, Navbar, NavItem, NavLink} from "reactstrap";
 
+/**
+ * Resumen del exchange para ver rapidamente
+ * .- Volumen 24 hrs.
+ * .- Max. Precio
+ * .- Min. Precio
+ * .- Variación
+ */
 class Summary extends Component {
     /**
      * Default constructor
@@ -21,28 +17,41 @@ class Summary extends Component {
      */
     constructor(props) {
         super(props);
+        this.state = {
+            availableBooks: props.availableBooks,
+            isOpen: false,
+            onSelectBook: props.onSelectBook
+        };
+        this.onSelectBook = this.onSelectBook.bind(this);
+    }
+
+    onSelectBook(book) {
+        console.log(book);
+        this.state.onSelectBook(book);
     }
 
     render() {
+        const {selectedBook} = this.props;
+        const book = selectedBook.replace("_", "/");
         return (
             <Navbar expand="md" dark={true} className={"sub-nav"}>
                 <Container fluid>
                     <Nav className="nav float-left" navbar>
                         <Dropdown nav toggle={() => {
-                        }}>
+                        }} isOpen={this.state.isOpen}>
                             <DropdownToggle nav caret>
-                                BTC/MXN
+                                {book}
                             </DropdownToggle>
                             <DropdownMenu tag={"ul"}>
-                                <NavItem>
-                                    <NavLink href="#">Option 1</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink href="#">Option 2</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink href="#">Option 2</NavLink>
-                                </NavItem>
+                                {this.state.availableBooks.map(item => {
+                                    const book = item.book.replace("_", "/");
+                                    return (
+                                        <NavItem key={item.book}>
+                                            <NavLink href="javascript:;"
+                                                     onClick={() => this.onSelectBook(item.book)}>{book}</NavLink>
+                                        </NavItem>
+                                    );
+                                })}
                             </DropdownMenu>
                         </Dropdown>
                     </Nav>
@@ -59,5 +68,11 @@ class Summary extends Component {
         );
     }
 }
+
+Summary.propTypes = {
+    selectedBook: PropTypes.string.isRequired,
+    availableBooks: PropTypes.array.isRequired,
+    onSelectBook: PropTypes.func.isRequired
+};
 
 export default Summary;

@@ -1,0 +1,54 @@
+@-webkit-keyframes flash {
+  from {
+    background: var(--primary-dark);
+  }
+  to {
+    background: var(--primary);
+  }
+}
+
+@keyframes flash {
+  from {
+    background: var(--primary-dark);
+  }
+  to {
+    background: var(--primary);
+  }
+}
+
+.flash {
+  -webkit-animation: flash 5s; /* Safari 4.0 - 8.0 */
+  animation: flash 10s;
+}
+
+.last-trades {
+  table {
+    thead {
+      tr {
+        th {
+          color: var(--color-primary);
+          .currency-price, .currency-amount {
+            color: var(--color-primary-accent);
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+    tr {
+      th {
+        text-transform: uppercase;
+      }
+      td, th {
+        border: 0px !important;
+        padding: 5px !important;
+        margin: 0px;
+        &:first-child {
+        }
+        &:last-child {
+          text-align: right;
+        }
+        font-size: var(--font-size-small);
+      }
+    }
+  }
+}

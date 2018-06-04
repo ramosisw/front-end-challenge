@@ -40,6 +40,10 @@ class Header extends Component {
         });
     }
 
+    /**
+     * Render view
+     * @returns {*}
+     */
     render() {
         return (
             <Navbar expand="md" dark={true}>
@@ -107,7 +111,7 @@ class Header extends Component {
                             <Dropdown nav toggle={() => {
                             }}>
                                 <DropdownToggle nav caret className={"menu-profile"}>
-                                    Julio
+                                    Usuario
                                 </DropdownToggle>
                                 <DropdownMenu tag={"ul"}>
                                     <NavItem>
