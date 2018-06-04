@@ -4,7 +4,7 @@
   "description": "Bitso Front-End Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "jest --updateSnapshot && codecov",
+    "test": "jest --updateSnapshot --detectOpenHandles && codecov",
     "start": "webpack-dev-server --mode development",
     "host": "webpack-dev-server --mode development --inline --host 192.168.12.12 --content-base .",
     "build": "webpack --mode production",
