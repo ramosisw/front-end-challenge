@@ -5,8 +5,16 @@ import renderer from 'react-test-renderer';
 console.error = jest.fn();
 
 test('Exception on required props', () => {
-    const component = renderer.create(
+    renderer.create(
         <LastTrades/>
     );
     expect(console.error).toHaveBeenCalledTimes(2);
+});
+
+test('Render with out errors', () => {
+    const component = renderer.create(
+        <LastTrades book={"btc_mxn"} trades={[]}/>
+    )
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
 });
