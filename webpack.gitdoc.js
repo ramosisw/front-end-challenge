@@ -1,10 +1,13 @@
+const webpack = require("webpack");
+
 const path = require("path");
-const bundlePath = path.resolve(__dirname, "docs/dist/");
-const config = require('./webpack.config.js');
+const config = require('./webpack.common.js');
 const merge = require('webpack-merge');
 
 module.exports = merge(config, {
+    devtool: 'source-map',
+    mode: 'production',
     output: {
-        publicPath: bundlePath
+        publicPath: path.resolve(__dirname, './docs/dist/')
     }
 });
