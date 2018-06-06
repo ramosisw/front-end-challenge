@@ -32,6 +32,25 @@ class BitsoExchange extends Component {
         this.onMessage = this.onMessage.bind(this);
     }
 
+    websocketRegister(book){
+        if(!this.websocket || this.websocket === undefined) return;
+        let _this = this;
+        this.websocket.send(
+            JSON.stringify({
+                action: "subscribe",
+                book: _this.state.selectedBook,
+                type: "trades"
+            })
+        );
+        /*this.websocket.send(
+            JSON.stringify({
+                action: "subscribe",
+                book: _this.state.selectedBook,
+                type: "diff-orders"
+            })
+        );*/
+    }
+
     /**
      *
      */
@@ -56,24 +75,7 @@ class BitsoExchange extends Component {
                 _this.setState(state);
             }
         });
-        this.websocket = new WebSocket("wss://ws.bitso.com");
-        this.websocket.onopen = () => {
-            this.websocket.send(
-                JSON.stringify({
-                    action: "subscribe",
-                    book: _this.state.selectedBook,
-                    type: "trades"
-                })
-            );
-            /*this.websocket.send(
-                JSON.stringify({
-                    action: "subscribe",
-                    book: _this.state.selectedBook,
-                    type: "diff-orders"
-                })
-            );*/
-        };
-        this.websocket.onmessage = this.onMessage;
+        this.onSelectBook(this.state.selectedBook);
     }
 
     /**
@@ -85,12 +87,20 @@ class BitsoExchange extends Component {
 
     onSelectBook(book) {
         console.log("selected book: " + book);
+        //Close if is open
+        if(this.websocket || this.websocket !== undefined) this.websocket.close();
+        this.websocket = new WebSocket("wss://ws.bitso.com");
+        this.websocket.onopen = () => {
+            this.websocketRegister(this.state.selectedBook);
+        };
+        this.websocket.onmessage = this.onMessage;
         this.setState({
             selectedBook: book
         })
     }
 
     onMessage(message) {
+        console.log("TradeResponse: " + message.data);
         let response;
         if (message.data) response = JSON.parse(message.data);
         if (response.action) return console.log(response);
@@ -111,7 +121,7 @@ class BitsoExchange extends Component {
     render() {
         if (this.state.loading) return <Header/>;
         return (
-            <div className="App">
+            <div className="BitsoExchange">
                 <Header/>
                 <Summary selectedBook={this.state.selectedBook} availableBooks={this.state.availableBooks}
                          onSelectBook={book => this.onSelectBook(book)}/>

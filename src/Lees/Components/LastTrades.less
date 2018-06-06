@@ -17,8 +17,8 @@
 }
 
 .flash {
-  -webkit-animation: flash 5s; /* Safari 4.0 - 8.0 */
-  animation: flash 10s;
+  -webkit-animation: flash 2s; /* Safari 4.0 - 8.0 */
+  animation: flash 2s;
 }
 
 .last-trades {
@@ -32,6 +32,11 @@
             margin-right: 5px;
           }
         }
+      }
+    }
+    tbody {
+      tr:hover {
+        background: var(--primary);
       }
     }
     tr {
@@ -51,4 +56,5 @@
       }
     }
   }
+
 }
