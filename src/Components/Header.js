@@ -13,6 +13,7 @@ import {
     NavItem,
     NavLink
 } from "reactstrap";
+import PropTypes from 'prop-types';
 //import Assets
 import logo from '../../Assets/Images/SVG/bitso_logo.svg';
 
@@ -45,6 +46,11 @@ class Header extends Component {
      * @returns {*}
      */
     render() {
+        const {book, price} = this.props;
+        if (!book || !price) return "";
+        const currencies = book.split("_");
+        const currency_amount = currencies[0];
+        const currency_price = currencies[1];
         return (
             <Navbar expand="md" dark={true}>
                 <Container fluid>
@@ -57,7 +63,8 @@ class Header extends Component {
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto nav" navbar>
                             <NavItem>
-                                <NavLink href={"#"}>1 BTC = 000,000,00 MXN</NavLink>
+                                <NavLink href={"#"}
+                                         className={"price"}>1 {currency_amount} = {price} {currency_price}</NavLink>
                             </NavItem>
                             <NavItem className="menu-divider d-none d-md-block"/>
                             <Dropdown nav toggle={() => {
@@ -129,5 +136,10 @@ class Header extends Component {
         );
     }
 }
+
+Header.propTypes = {
+    book: PropTypes.string.isRequired,
+    price: PropTypes.string.isRequired,
+};
 
 export default Header;

@@ -13,24 +13,23 @@
   animation: @arguments;
 }
 
-@keyframes flash {
-  from {
-    background: var(--primary-dark);
-  }
-  to {
+.keyframes(flash; { 0% {
+  background: var(--primary-dark);
+} 100% {
     background: var(--primary);
-  }
-}
+  } });
 
-.flash {
-  .keyframes(flash; { 0% {
-    background: var(--primary-dark);
-  } 100% {
-      background: var(--primary);
-    } });
-  /*animation: flash 1s;*/
-  animation: flash 1;
-}
+.keyframes(flash-buy; { 0% {
+  color: var(--light-green);
+} 100% {
+    color: var(--light-green);
+  } });
+
+.keyframes(flash-sell; { 0% {
+  color: var(--light-red);
+} 100% {
+    color: var(--light-red);
+  } });
 
 .last-trades {
   table {
@@ -53,13 +52,13 @@
   table {
     tr {
       &:hover {
+        background: var(--primary);
         td:first-child, td:last-child {
           color: var(--light-text);
+          .zeros {
+            color: var(--medium-navy);
+          }
         }
-        td:last-child .zeros {
-          color: var(--medium-navy);
-        }
-        background: var(--primary);
         .sell {
           color: var(--light-red) !important;
         }

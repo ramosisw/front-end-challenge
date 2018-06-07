@@ -1,15 +1,27 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import BitsoExchange from "./BitsoExchange.js";
-import {BrowserRouter, Switch, Route, withRouter} from "react-router-dom";
+import {BrowserRouter, Route, Switch, withRouter} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js"
 import "./Lees/index.less";
-import LastTrades from "./Components/LastTrades";
 
 if (process.env.NODE_ENV !== 'production') {
     console.log('Looks like we are in development mode!');
 }
+
+/*---------------PROTO------------*/
+if (!String.prototype.formataToCurrency) {
+    (function () {
+        var rgx = new RegExp("(\\d)(?=(\\d{3})+\\.)", "g");
+        String.prototype.formatCurrency = function (currencySymbol) {
+            if (!currencySymbol) currencySymbol = "$";
+            if (this === undefined) return currencySymbol + "0.00";
+            return currencySymbol + " " + (this).replace(rgx, "$1,");
+        }
+    })();
+}
+
 
 class BitsoSwitch extends Component {
     render() {
