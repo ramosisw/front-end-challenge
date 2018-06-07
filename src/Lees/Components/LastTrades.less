@@ -1,10 +1,16 @@
-@-webkit-keyframes flash {
-  from {
-    background: var(--primary-dark);
+.keyframes(@name; @arguments) {
+  @-moz-keyframes @name { @arguments();
   }
-  to {
-    background: var(--primary);
+  @-webkit-keyframes @name { @arguments();
   }
+  @keyframes @name { @arguments();
+  }
+}
+
+.animation(@arguments) {
+  -webkit-animation: @arguments;
+  -moz-animation: @arguments;
+  animation: @arguments;
 }
 
 @keyframes flash {
@@ -17,42 +23,72 @@
 }
 
 .flash {
-  -webkit-animation: flash 2s; /* Safari 4.0 - 8.0 */
-  animation: flash 2s;
+  .keyframes(flash; { 0% {
+    background: var(--primary-dark);
+  } 100% {
+      background: var(--primary);
+    } });
+  /*animation: flash 1s;*/
+  animation: flash 1;
 }
 
 .last-trades {
   table {
-    thead {
-      tr {
-        th {
-          color: var(--color-primary);
-          .currency-price, .currency-amount {
-            color: var(--color-primary-accent);
-            margin-right: 5px;
-          }
+    td, th {
+      border: 0px !important;
+      padding: 5px !important;
+      margin: 0px;
+      font-size: var(--font-size-small);
+
+      &:first-child {
+      }
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.last-trades {
+  table {
+    tr {
+      &:hover {
+        td:first-child, td:last-child {
+          color: var(--light-text);
+        }
+        td:last-child .zeros {
+          color: var(--medium-navy);
+        }
+        background: var(--primary);
+        .sell {
+          color: var(--light-red) !important;
+        }
+        .buy {
+          color: var(--light-green) !important;
         }
       }
-    }
-    tbody {
-      tr:hover {
-        background: var(--primary);
-      }
-    }
-    tr {
       th {
         text-transform: uppercase;
+        color: var(--color-primary);
+        .currency-price, .currency-amount {
+          color: var(--color-primary-accent);
+          margin-right: 5px;
+        }
       }
-      td, th {
-        border: 0px !important;
-        padding: 5px !important;
-        margin: 0px;
-        &:first-child {
-        }
+      td {
         &:last-child {
-          text-align: right;
+          color: var(--sidebar-text);
+          .zeros {
+            color: var(--medium-navy);
+          }
         }
-        font-size: var(--font-size-small);
+        color: var(--medium-navy);
+        &.sell {
+          color: var(--dark-red) !important;
+        }
+        &.buy {
+          color: var(--dark-green) !important;
+        }
       }
     }
   }

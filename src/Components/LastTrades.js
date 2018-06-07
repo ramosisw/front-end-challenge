@@ -36,13 +36,14 @@ class LastTrades extends Component {
      * @returns {*}
      */
     render() {
+        console.log("LastTrades props: " + JSON.stringify(this.props));
         const {book, trades} = this.props;
         if (!trades || !book) return "";
         let flash = true;
         for (let trade of trades) {
             /*TradeResponse[{"i":7693045,"a":"0.00099991","r":"153697.55","v":"153.68371722","mo":"CyQQFbmz7GhBbsbI","to":"aJZUXFxbvzAV1MIE","t":0}]*/
             this.state.trades.unshift({
-                market_side: trade.t == 0 ? "buy" : "sell",
+                maker_side: trade.t == 0 ? "buy" : "sell",
                 created_at: moment().toISOString(),
                 tid: trade.i,
                 price: trade.r,
@@ -71,13 +72,19 @@ class LastTrades extends Component {
                     </thead>
                     <tbody>
                     {this.state.trades.map(trade => {
+                        trade.price = (trade.price * 1).toFixed(this.props.valueToFixed);
+                        trade.amount = (trade.amount * 1).toFixed(this.props.amountToFixed);
+
+                        let zeros = trade.amount.replace(/[0-9.]+[^0]/g, "");
+                        trade.amount = trade.amount.replace(/[0]+$/g, "");
+
                         /*getTrades: {"book":"btc_mxn","created_at":"2018-06-03T18:59:52+0000","amount":"0.00220640","maker_side":"sell","price":"154097.40","tid":7693079}*/
                         return (
                             <tr key={trade.tid} className={"flash"}>
                                 <td>{moment(trade.created_at).format("H:mm:ss")}</td>
-                                <td>{trade.price}</td>
-                                {/*<td>1.090484<span className={"zeros"}>00</span></td>*/}
-                                <td>{trade.amount}</td>
+                                <td className={trade.maker_side}>{trade.price}</td>
+                                <td>{trade.amount}<span className={"zeros"}>{zeros}</span></td>
+                                {/*<td>{trade.amount}</td>*/}
                             </tr>
                         )
                     })}
@@ -90,7 +97,9 @@ class LastTrades extends Component {
 
 LastTrades.propTypes = {
     book: PropTypes.string.isRequired,
-    trades: PropTypes.array.isRequired
+    trades: PropTypes.array.isRequired,
+    amountToFixed: PropTypes.number,
+    valueToFixed: PropTypes.number
 };
 
 export default LastTrades;
