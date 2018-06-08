@@ -20,15 +20,18 @@ test(componentName + "Render OK", () => {
     expect(tree).toMatchSnapshot();
 });
 
-test(componentName + "Toggle nav", () => {
+/*test(componentName + "Toggle nav", () => {
     const component = renderer.create(
         <Header book={"btc_mxn"} price={"$ 150,000.00"}/>
     );
+
+    const wrapper = shallow(component);
+
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 
-    //Header.toggleNav();
+    wrapper.instance().toggleNav();
 
     tree = component.toJSON();
     expect(tree).toMatchSnapshot();
-});
+});*/

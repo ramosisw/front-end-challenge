@@ -13,7 +13,7 @@ class Chart extends Component {
      */
     render() {
         return (
-            <p>Chart</p>
+            <div id={"chart"}></div>
         );
     }
 }

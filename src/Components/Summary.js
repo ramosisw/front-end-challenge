@@ -31,8 +31,12 @@ class Summary extends Component {
     }
 
     render() {
-        const {selectedBook} = this.props;
+        const {selectedBook, ticker} = this.props;
+        if (!selectedBook || !ticker) return "";
         const book = selectedBook.replace("_", "/");
+        const currencies = book.split("/");
+        const currency_amount = currencies[0];
+        const currency_price = currencies[1];
         return (
             <Navbar expand="md" dark={true} className={"sub-nav"}>
                 <Container fluid>
@@ -56,12 +60,15 @@ class Summary extends Component {
                         </Dropdown>
                     </Nav>
                     <div className={"row float-left"}>
-                        <p>Volumen 24hrs. <span className={"value"}>000.00000000</span><span
-                            className={"currency"}>BTC</span></p>
-                        <p>Max. <span className={"value"}>000,000.00</span><span className={"currency"}>MXN</span></p>
-                        <p>Min. <span className={"value"}>000,000.00</span><span className={"currency"}>MXN</span></p>
-                        <p>Variación <span className={"value"}>000,000.00</span><span
-                            className={"currency"}>MXN</span><span className={"percent"}>(0.0%)</span></p>
+                        <p>Volumen 24hrs. <span className={"value"}>{ticker.volume}</span><span
+                            className={"currency"}>{currency_amount}</span></p>
+                        <p>Max. <span className={"value"}>{ticker.high}</span><span
+                            className={"currency"}>{currency_price}</span></p>
+                        <p>Min. <span className={"value"}>{ticker.low}</span><span
+                            className={"currency"}>{currency_price}</span></p>
+                        <p>Variación <span className={"value"}>{ticker.variation}</span><span
+                            className={"currency"}>MXN</span><span
+                            className={"percent"}>({ticker.variation_percent}%)</span></p>
                     </div>
                 </Container>
             </Navbar>

@@ -1,16 +1,18 @@
 import React, {Component} from "react";
 import axios from "axios";
+import {Col, Container, Row} from "reactstrap";
 import {polyfill} from "babel-polyfill";
 import "../Assets/Fonts/DINPro-Light.otf";
 import "../Assets/Fonts/DINPro-Medium.otf";
 import "../Assets/Fonts/DINPro-Regular.otf";
 
-import {Container, Row} from "reactstrap";
-
 import Header from "./Components/Header";
 import Summary from "./Components/Summary";
 import LastTrades from "./Components/LastTrades";
 import moment from "moment/moment";
+import Chart from "./Components/Chart";
+import Bids from "./Components/Bids";
+import Asks from "./Components/Asks";
 
 class BitsoExchange extends Component {
 
@@ -30,14 +32,22 @@ class BitsoExchange extends Component {
             availableBooks: null,
             loading: true,
             trades: [],
+            asks: [],
+            bids: [],
             isPriceCurrency: false,
-            lastPrice: "$ 0.00"
+            lastPrice: "$ 0.00",
+            tickerInterval: null,
+            ticker: null
         };
 
         this.onSelectBook = this.onSelectBook.bind(this);
         this.onMessage = this.onMessage.bind(this);
     }
 
+    /**
+     * Register websocker on book
+     * @param book to register
+     */
     websocketRegister(book) {
         if (!this.websocket || this.websocket === undefined) return;
         this.websocket.send(
@@ -47,13 +57,48 @@ class BitsoExchange extends Component {
                 type: "trades"
             })
         );
-        /*this.websocket.send(
+        this.websocket.send(
             JSON.stringify({
                 action: "subscribe",
-                book: _this.state.selectedBook,
+                book,
                 type: "diff-orders"
             })
-        );*/
+        );
+    }
+
+    /**
+     * Get ticker every second
+     * @param book
+     */
+    tickerRegister(book) {
+        if (this.state.tickerInterval) {
+            clearInterval(this.state.tickerInterval);
+            this.setState({ticker: null});
+        }
+        const tickerInterval = setInterval(() => {
+            axios.get("https://api.bitso.com/v3/ticker/", {
+                params: {book}
+            }).then(message => {
+                if (!message.data && !message.data.success) return;
+                const response = message.data;
+
+                let ticker = response.payload;
+                ticker.variation = (ticker.last * 1 - ticker.vwap * 1);
+                ticker.variation_percent = ticker.variation / (ticker.vwap * 1);
+                let positive = ticker.variation > 0;
+                ticker.variation = Math.abs(ticker.variation);
+                ticker.variation_percent = Math.abs(ticker.variation_percent);
+                if (this.state.isPriceCurrency) {
+                    ticker.high = ticker.high.formatCurrency();
+                    ticker.low = ticker.low.formatCurrency();
+                    ticker.variation = ticker.variation.toFixed(this.state.valueDecimals).formatCurrency();
+                }
+                ticker.variation = (positive ? "+" : "-") + ticker.variation;
+                ticker.variation_percent = (positive ? "" : "-") + ticker.variation_percent.toFixed(2);
+                this.setState({ticker});
+            });
+        }, 1000);
+        this.setState({tickerInterval});
     }
 
     /**
@@ -89,36 +134,47 @@ class BitsoExchange extends Component {
         this.websocket.close();
     }
 
+    getDecimals(currency) {
+        switch (currency) {
+            case 'xau':
+            case 'xrp':
+                return 6;
+            case 'btc':
+            case 'eth':
+            case 'bch':
+            case 'ltc':
+                return 8;
+            case 'mxn':
+            case 'cad':
+            case 'usd':
+            default:
+                return 2;
+        }
+    }
+
+    /**
+     * When book is selected
+     * @param book
+     */
     onSelectBook(book) {
         console.log("selected book: " + book);
         //Close if is open
         if (this.websocket || this.websocket !== undefined) {
-            console.log("close ws");
             this.websocket.close();
-            this.websocket.onmessage = null;
-            this.websocket = null;
         }
+
         this.websocket = new WebSocket("wss://ws.bitso.com")
         this.websocket.onopen = () => {
             this.websocketRegister(book);
         };
         this.websocket.onmessage = this.onMessage;
 
-        let amountDecimals;
-        let valueDecimals;
         let b_split = book.split("_");
         let isPriceCurrency = b_split.length >= 2 && b_split[1].toLowerCase() == this.state.nationalCurrency;
 
-        for (let item of this.state.availableBooks) {
-            if (item.book === book) {
-                let a_split = item.maximum_amount.split(".");
-                let v_split = item.maximum_value.split(".");
+        let amountDecimals = this.getDecimals(b_split[0]);
+        let valueDecimals = this.getDecimals(b_split[1]);
 
-                if (a_split && a_split.length == 2) amountDecimals = a_split[1].length;
-                if (v_split && v_split.length == 2) valueDecimals = v_split[1].length;
-                break;
-            }
-        }
         this.setState({
             amountDecimals,
             valueDecimals,
@@ -127,9 +183,15 @@ class BitsoExchange extends Component {
             trades: [],
             lastPrice: "$ 0.00"
         });
+        this.tickerRegister(book);
         this.getTrades(book);
+        this.getOrders(book);
     }
 
+    /**
+     * When a message received on websocket, process here
+     * @param message
+     */
     onMessage(message) {
         let response;
         if (message.data) response = JSON.parse(message.data);
@@ -164,9 +226,17 @@ class BitsoExchange extends Component {
                 });
 
                 break;
+            case 'diff-orders':
+                //console.log(response);
+                break;
         }
     }
 
+    /**
+     * Get the last 50 trades
+     * @param book of trades
+     * @returns {Promise<AxiosResponse<any>>}
+     */
     getTrades(book) {
         return axios.get("https://api.bitso.com/v3/trades/", {
             params: {book, sort: "desc", limit: 50}
@@ -188,6 +258,35 @@ class BitsoExchange extends Component {
         });
     }
 
+    getOrders(book) {
+        return axios.get("https://api.bitso.com/v3/order_book/", {
+            params: {book}
+        }).then(message => {
+            if (!message.data && !message.data.success) return;
+            const response = message.data;
+            console.log(response);
+            let orders = response.payload;
+            let asks = orders.asks;
+            let bids = orders.bids;
+
+            for (let ask of asks) {
+                ask.value = (ask.price * ask.amount).toFixed(this.state.valueDecimals);
+                if (this.state.isPriceCurrency) {
+
+                }
+            }
+
+            for (let bid of bids) {
+                bid.value = (bid.price * bid.amount).toFixed(this.state.valueDecimals);
+                if (this.state.isPriceCurrency) {
+
+                }
+            }
+
+            this.setState({asks, bids});
+        });
+    }
+
     /**
      * Render
      * @returns {*} view
@@ -198,10 +297,17 @@ class BitsoExchange extends Component {
             <div className="BitsoExchange">
                 <Header book={this.state.selectedBook} price={this.state.lastPrice}/>
                 <Summary selectedBook={this.state.selectedBook} availableBooks={this.state.availableBooks}
-                         onSelectBook={book => this.onSelectBook(book)}/>
+                         onSelectBook={book => this.onSelectBook(book)} ticker={this.state.ticker}/>
                 <Container fluid className={"main"}>
                     <Row>
                         <LastTrades book={this.state.selectedBook} trades={this.state.trades}/>
+                        <Col md={"9"} className={"last-trades"}>
+                            <Chart/>
+                            <Row>
+                                <Bids orders={this.state.bids}/>
+                                <Asks orders={this.state.asks}/>
+                            </Row>
+                        </Col>
                     </Row>
                 </Container>
             </div>
