@@ -52,12 +52,12 @@
   table {
     tr {
       &:hover {
-        background: var(--primary);
-        td:first-child, td:last-child {
+        td {
+          background: var(--primary);
           color: var(--light-text);
-          .zeros {
-            color: var(--medium-navy);
-          }
+        }
+        .zeros {
+          color: var(--medium-navy);
         }
         .sell {
           color: var(--light-red) !important;
@@ -75,13 +75,10 @@
         }
       }
       td {
-        &:last-child {
-          color: var(--sidebar-text);
-          .zeros {
-            color: var(--medium-navy);
-          }
+        color: var(--sidebar-text);
+        .zeros {
+          color: var(--medium-navy);
         }
-        color: var(--medium-navy);
         &.sell {
           color: var(--dark-red) !important;
         }

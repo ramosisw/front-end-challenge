@@ -11,17 +11,26 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 /*---------------PROTO------------*/
-if (!String.prototype.formataToCurrency) {
+if (!String.prototype.formatCurrency) {
     (function () {
         var rgx = new RegExp("(\\d)(?=(\\d{3})+\\.)", "g");
         String.prototype.formatCurrency = function (currencySymbol) {
-            if (!currencySymbol) currencySymbol = "$";
+            if (!currencySymbol && currencySymbol !== "") currencySymbol = "$";
             if (this === undefined) return currencySymbol + "0.00";
             return currencySymbol + " " + (this).replace(rgx, "$1,");
         }
     })();
 }
 
+if (!Math.randomInt) {
+    (function () {
+        Math.randomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+    })();
+}
+
+/*------------END PROTO------------*/
 
 class BitsoSwitch extends Component {
     render() {

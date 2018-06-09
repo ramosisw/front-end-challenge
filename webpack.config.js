@@ -53,6 +53,7 @@ module.exports = {
     },
     resolve: {extensions: ['*', '.js', '.jsx']},
     output: {
+        path: bundlePath,
         publicPath: bundlePath,
         filename: "[name].bundle.js"
     },

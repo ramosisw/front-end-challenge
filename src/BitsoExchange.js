@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {Col, Container, Row} from "reactstrap";
 import {polyfill} from "babel-polyfill";
+import RandomString from "randomstring";
 import "../Assets/Fonts/DINPro-Light.otf";
 import "../Assets/Fonts/DINPro-Medium.otf";
 import "../Assets/Fonts/DINPro-Regular.otf";
@@ -13,6 +14,7 @@ import moment from "moment/moment";
 import Chart from "./Components/Chart";
 import Bids from "./Components/Bids";
 import Asks from "./Components/Asks";
+
 
 class BitsoExchange extends Component {
 
@@ -67,7 +69,7 @@ class BitsoExchange extends Component {
     }
 
     /**
-     * Get ticker every second
+     * Get ticker every 60 minutes
      * @param book
      */
     tickerRegister(book) {
@@ -83,8 +85,8 @@ class BitsoExchange extends Component {
                 const response = message.data;
 
                 let ticker = response.payload;
-                ticker.variation = (ticker.last * 1 - ticker.vwap * 1);
-                ticker.variation_percent = ticker.variation / (ticker.vwap * 1);
+                ticker.variation = (+ticker.last - +ticker.vwap);
+                ticker.variation_percent = ticker.variation / (+ticker.vwap);
                 let positive = ticker.variation > 0;
                 ticker.variation = Math.abs(ticker.variation);
                 ticker.variation_percent = Math.abs(ticker.variation_percent);
@@ -97,7 +99,7 @@ class BitsoExchange extends Component {
                 ticker.variation_percent = (positive ? "" : "-") + ticker.variation_percent.toFixed(2);
                 this.setState({ticker});
             });
-        }, 1000);
+        }, 60 * 60 * 1000);
         this.setState({tickerInterval});
     }
 
@@ -199,17 +201,12 @@ class BitsoExchange extends Component {
         switch (response.type) {
             case "trades":
                 for (let trade of response.payload) {
-                    //evitar duplicados
-                    for (let item of this.state.trades) {
-                        if (trade.i == item.tid) continue;
-                    }
-
-                    trade.r = (trade.r * 1).toFixed(this.state.valueDecimals);
-                    trade.a = (trade.a * 1).toFixed(this.state.amountDecimals);
+                    trade.r = (+trade.r).toFixed(this.state.valueDecimals);
+                    trade.a = (+trade.a).toFixed(this.state.amountDecimals);
                     if (this.state.isPriceCurrency) trade.r = trade.r.formatCurrency();
 
                     this.state.trades.unshift({
-                        maker_side: trade.t == 0 ? "buy" : "sell",
+                        maker_side: trade.t === 0 ? "buy" : "sell",
                         created_at: moment().toISOString(),
                         tid: trade.i,
                         price: trade.r,
@@ -228,6 +225,65 @@ class BitsoExchange extends Component {
                 break;
             case 'diff-orders':
                 //console.log(response);
+                //return;
+                let orders = response.payload;
+                let bids = this.state.bids;
+                let asks = this.state.asks;
+                for (let item of orders) {
+                    let order = {
+                        price: +item.r,
+                        amount: +item.a,
+                        value: (item.v ? +item.v : 0).toFixed(this.state.valueDecimals).formatCurrency(""),
+                        str_price: "",
+                        str_amount: (+item.a).toFixed(this.state.amountDecimals),
+                        sum: 0,
+                        key: item.o
+                    };
+
+                    if (this.state.isPriceCurrency) {
+                        order.str_price = order.price.toFixed(this.state.valueDecimals).formatCurrency("");
+                    }
+                    if (item.s === "open") {
+                        switch (item.t) {
+                            case 0:
+                                bids.push(order);
+                                break;
+                            case 1:
+                                asks.push(order);
+                                break;
+                        }
+                    } else {
+                        switch (item.t) {
+                            case 0:
+                                this.setState(state => ({
+                                    bids: state.bids.filter(
+                                        bids => bids.key !== item.key
+                                    )
+                                }));
+                                break;
+                            case 1:
+                                this.setState(state => ({
+                                    asks: state.asks.filter(
+                                        asks => asks.key !== item.key
+                                    )
+                                }));
+                                break;
+                        }
+
+                    }
+                }
+                asks.sort((a, b) => {
+                    a.price - b.price
+                });
+                bids.sort((a, b) => {
+                    a.price + b.price
+                });
+
+                asks = asks.slice(0, 30);
+                bids = bids.slice(0, 30);
+
+                this.calculateSum([asks, bids]);
+                this.setState({asks, bids});
                 break;
         }
     }
@@ -246,8 +302,8 @@ class BitsoExchange extends Component {
             let trades = response.payload;
             for (let trade of trades) {
                 trade.flash = "";
-                trade.price = (trade.price * 1).toFixed(this.state.valueDecimals);
-                trade.amount = (trade.amount * 1).toFixed(this.state.amountDecimals);
+                trade.price = (+trade.price).toFixed(this.state.valueDecimals);
+                trade.amount = (+trade.amount).toFixed(this.state.amountDecimals);
                 if (this.state.isPriceCurrency) trade.price = trade.price.formatCurrency();
             }
             this.setState({
@@ -258,33 +314,59 @@ class BitsoExchange extends Component {
         });
     }
 
+    /**
+     * Get last 50 orders
+     * @param book of orders
+     * @returns {Promise<AxiosResponse<any>>}
+     */
     getOrders(book) {
         return axios.get("https://api.bitso.com/v3/order_book/", {
-            params: {book}
+            params: {book, aggregate: true}
         }).then(message => {
             if (!message.data && !message.data.success) return;
             const response = message.data;
-            console.log(response);
+            //console.log(response);
             let orders = response.payload;
-            let asks = orders.asks;
             let bids = orders.bids;
+            let asks = orders.asks;
+            let ba_orders = [bids, asks];
 
-            for (let ask of asks) {
-                ask.value = (ask.price * ask.amount).toFixed(this.state.valueDecimals);
-                if (this.state.isPriceCurrency) {
+            for (let ba_order of ba_orders) {
+                //let sum = 0;
+                for (let item of ba_order) {
+                    item.price = +item.price;
+                    item.amount = +item.amount;
+                    //sum += item.amount;
+                    //item.sum = sum.toFixed(2);
+                    item.value = (item.price * item.amount).toFixed(this.state.valueDecimals).formatCurrency("");
+                    item.key = RandomString.generate(16);
+                    item.status = "open";
 
+                    item.str_amount = item.amount.toFixed(this.state.amountDecimals);
+                    if (this.state.isPriceCurrency) {
+                        item.str_price = item.price.toFixed(this.state.valueDecimals).formatCurrency("");
+                    }
                 }
             }
-
-            for (let bid of bids) {
-                bid.value = (bid.price * bid.amount).toFixed(this.state.valueDecimals);
-                if (this.state.isPriceCurrency) {
-
-                }
-            }
-
+            this.calculateSum(ba_orders);
+            asks = asks.slice(0, 30);
+            bids = bids.slice(0, 30);
             this.setState({asks, bids});
         });
+    }
+
+    /**
+     *
+     * @param ba_orders
+     */
+    calculateSum(ba_orders) {
+        for (let ba_order of ba_orders) {
+            let sum = 0;
+            for (let item of ba_order) {
+                sum += item.amount;
+                item.sum = sum.toFixed(2);
+            }
+        }
     }
 
     /**

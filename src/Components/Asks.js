@@ -1,5 +1,7 @@
 import React, {Component} from "react";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {Col, Table} from "reactstrap";
+import PropTypes from 'prop-types';
 
 class Asks extends Component {
     /**
@@ -30,27 +32,33 @@ class Asks extends Component {
                         <th></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {
-                        orders.map(order => {
-                            let zeros = order.amount.replace(/^[0-9.]+[^0]/g, "");
-                            let amount = order.amount.replace(/\.?[0]+$/g, "");
-                            return (
-                                <tr key={Math.random()} className={order.flash}>
-                                    <td>{order.price}</td>
-                                    <td className={"sell"}>{order.value}</td>
-                                    <td>{amount}<span className={"zeros"}>{zeros}</span></td>
-                                    <td>0</td>
-                                    <td>-------------------</td>
-                                </tr>
-                            )
-                        })
-                    }
-                    </tbody>
+                    <TransitionGroup component="tbody">
+                        {
+                            orders.map(order => {
+                                let zeros = order.str_amount.replace(/^[0-9.]+[^0]/g, "");
+                                let amount = order.str_amount.replace(/\.?[0]+$/g, "");
+                                return (
+                                    <CSSTransition key={order.key} timeout={700} classNames={"ask-flash"}>
+                                        <tr>
+                                            <td>{order.str_price}</td>
+                                            <td className={"sell"}>{order.value}</td>
+                                            <td>{amount}<span className={"zeros"}>{zeros}</span></td>
+                                            <td>{order.sum}</td>
+                                            <td>-------------------</td>
+                                        </tr>
+                                    </CSSTransition>
+                                )
+                            })
+                        }
+                    </TransitionGroup>
                 </Table>
             </Col>
         );
     }
 }
+
+Asks.propTypes = {
+    orders: PropTypes.array.isRequired,
+};
 
 export default Asks;
