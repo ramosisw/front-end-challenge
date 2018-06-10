@@ -6,22 +6,22 @@
 
 ![Front End Challenge Image](https://github.com/bitsoex/front-end-challenge/blob/master/bann_bfec.jpg)
 
-#View [demo](https://ramosisw.github.io/front-end-challenge)
+# View [demo](https://ramosisw.github.io/front-end-challenge)
 
-#How to develop
+# How to develop
 
-##Clone project
+## Clone project
 ```sh
 $ git clone https://github.com/ramoisw/front-end-challenge
 ```
 
-##Install dependences
+## Install dependences
 
 ```sh
 $ npm install
 ```
 
-#Run project
+# Run project
 If you has cloned
 run
 ```sh
