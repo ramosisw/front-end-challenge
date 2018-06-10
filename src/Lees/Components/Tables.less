@@ -1,0 +1,45 @@
+table {
+  td, th {
+    padding: 5px !important;
+    border: 0px !important;
+    margin: 0px;
+    font-size: var(--font-size-small);
+  }
+  tr {
+    &:hover {
+      td {
+        background: var(--primary);
+        color: var(--light-text);
+      }
+      .zeros {
+        color: var(--medium-navy);
+      }
+      .sell {
+        color: var(--light-red) !important;
+      }
+      .buy {
+        color: var(--light-green) !important;
+      }
+    }
+    th {
+      text-transform: uppercase;
+      color: var(--color-primary);
+      .currency-price, .currency-amount {
+        color: var(--color-primary-accent);
+        margin-right: 5px;
+      }
+    }
+    td {
+      color: var(--sidebar-text);
+      .zeros {
+        color: var(--medium-navy);
+      }
+      &.sell {
+        color: var(--dark-red) !important;
+      }
+      &.buy {
+        color: var(--dark-green) !important;
+      }
+    }
+  }
+}

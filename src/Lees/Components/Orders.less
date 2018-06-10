@@ -1,36 +1,59 @@
 
-.ask-flash-enter {
+.ask-flash-enter, .bid-flash-enter {
   background: var(--regular-navy);
+}
+
+.ask-flash-exit, .bid-flash-exit {
+  background: var(--primary);
 }
 
 .ask-flash-enter-active {
-  background: var(--regular-red);
-  transition: opacity 800ms ease-in;
-}
-
-.ask-flash-exit {
-  background: var(--light-red);
-}
-
-.ask-flash-exit-active {
-  background: none;
-  transition: opacity 500ms ease-in;
-}
-
-.bid-flash-enter {
-  background: var(--regular-navy);
+  background: var(--dark-red);
+  transition: background 800ms ease-in;
 }
 
 .bid-flash-enter-active {
-  background: var(--regular-green);
-  transition: opacity 800ms ease-in;
+  background: var(--dark-green);
+  transition: background 800ms ease-in;
 }
 
-.bid-flash-exit {
-  background: var(--light-green);
+.ask-flash-enter-active, .bid-flash-enter-active {
+  color: var(--light-text);
+  .zeros {
+    color: var(--medium-navy);
+  }
+  .sell {
+    color: var(--light-red) !important;
+  }
+  .buy {
+    color: var(--light-green) !important;
+  }
 }
 
-.bid-flash-exit-active {
-  background: none;
-  transition: opacity 500ms ease-in;
+.ask-flash-exit-active, .bid-flash-exit-active {
+  background: var(--primary);
+  transition: background 500ms ease-in;
 }
+
+.asks, .bids {
+  table {
+    tr {
+      td, th {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.asks {
+  table {
+    tr {
+      td, th {
+        &:first-child {
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+

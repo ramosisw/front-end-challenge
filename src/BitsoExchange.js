@@ -14,6 +14,7 @@ import moment from "moment/moment";
 import Chart from "./Components/Chart";
 import Bids from "./Components/Bids";
 import Asks from "./Components/Asks";
+import Markerts from "./Components/Markerts";
 
 
 class BitsoExchange extends Component {
@@ -44,6 +45,11 @@ class BitsoExchange extends Component {
 
         this.onSelectBook = this.onSelectBook.bind(this);
         this.onMessage = this.onMessage.bind(this);
+        this.getTicker = this.getTicker.bind(this);
+        this.getDecimals = this.getDecimals.bind(this);
+        this.calculateSum = this.calculateSum.bind(this);
+        this.getTrades = this.getTrades.bind(this);
+        this.getOrders = this.getOrders.bind(this);
     }
 
     /**
@@ -78,28 +84,9 @@ class BitsoExchange extends Component {
             this.setState({ticker: null});
         }
         const tickerInterval = setInterval(() => {
-            axios.get("https://api.bitso.com/v3/ticker/", {
-                params: {book}
-            }).then(message => {
-                if (!message.data && !message.data.success) return;
-                const response = message.data;
-
-                let ticker = response.payload;
-                ticker.variation = (+ticker.last - +ticker.vwap);
-                ticker.variation_percent = ticker.variation / (+ticker.vwap);
-                let positive = ticker.variation > 0;
-                ticker.variation = Math.abs(ticker.variation);
-                ticker.variation_percent = Math.abs(ticker.variation_percent);
-                if (this.state.isPriceCurrency) {
-                    ticker.high = ticker.high.formatCurrency();
-                    ticker.low = ticker.low.formatCurrency();
-                    ticker.variation = ticker.variation.toFixed(this.state.valueDecimals).formatCurrency();
-                }
-                ticker.variation = (positive ? "+" : "-") + ticker.variation;
-                ticker.variation_percent = (positive ? "" : "-") + ticker.variation_percent.toFixed(2);
-                this.setState({ticker});
-            });
-        }, 60 * 60 * 1000);
+            this.getTicker(book);
+        }, 1000);
+        this.getTicker(book);
         this.setState({tickerInterval});
     }
 
@@ -136,6 +123,11 @@ class BitsoExchange extends Component {
         this.websocket.close();
     }
 
+    /**
+     *
+     * @param currency
+     * @returns {number}
+     */
     getDecimals(currency) {
         switch (currency) {
             case 'xau':
@@ -227,63 +219,64 @@ class BitsoExchange extends Component {
                 //console.log(response);
                 //return;
                 let orders = response.payload;
-                let bids = this.state.bids;
-                let asks = this.state.asks;
-                for (let item of orders) {
-                    let order = {
+                let bids = [...this.state.bids];
+                let asks = [...this.state.asks];
+                for (const item of orders) {
+                    const order = {
+                        book: this.state.selectedBook,
                         price: +item.r,
                         amount: +item.a,
                         value: (item.v ? +item.v : 0).toFixed(this.state.valueDecimals).formatCurrency(""),
-                        str_price: "",
-                        str_amount: (+item.a).toFixed(this.state.amountDecimals),
-                        sum: 0,
                         key: item.o
                     };
 
+                    order.str_amount = (+item.a).toFixed(this.state.amountDecimals);
+
+                    order.str_price = order.price.toFixed(this.state.valueDecimals);
                     if (this.state.isPriceCurrency) {
-                        order.str_price = order.price.toFixed(this.state.valueDecimals).formatCurrency("");
+                        order.str_price = order.str_price.formatCurrency("");
                     }
                     if (item.s === "open") {
                         switch (item.t) {
                             case 0:
-                                bids.push(order);
+                                bids = [order, ...bids];
+                                bids = bids.sort((a, b) =>
+                                    a.price < b.price
+                                ).slice(-20);
+                                this.calculateSum(bids);
                                 break;
                             case 1:
-                                asks.push(order);
+                                asks = [order, ...asks];
+                                asks = asks.sort((a, b) =>
+                                    a.price > b.price
+                                ).slice(-20);
+                                this.calculateSum(asks);
                                 break;
                         }
+
+                        this.setState({
+                            asks: asks,
+                            bids: bids
+                        });
                     } else {
                         switch (item.t) {
                             case 0:
                                 this.setState(state => ({
                                     bids: state.bids.filter(
-                                        bids => bids.key !== item.key
-                                    )
+                                        bids => bids.key !== item.o
+                                    ),
                                 }));
                                 break;
                             case 1:
                                 this.setState(state => ({
                                     asks: state.asks.filter(
-                                        asks => asks.key !== item.key
-                                    )
+                                        asks => asks.key !== item.o
+                                    ),
                                 }));
                                 break;
                         }
-
                     }
                 }
-                asks.sort((a, b) => {
-                    a.price - b.price
-                });
-                bids.sort((a, b) => {
-                    a.price + b.price
-                });
-
-                asks = asks.slice(0, 30);
-                bids = bids.slice(0, 30);
-
-                this.calculateSum([asks, bids]);
-                this.setState({asks, bids});
                 break;
         }
     }
@@ -336,22 +329,58 @@ class BitsoExchange extends Component {
                 for (let item of ba_order) {
                     item.price = +item.price;
                     item.amount = +item.amount;
-                    //sum += item.amount;
-                    //item.sum = sum.toFixed(2);
                     item.value = (item.price * item.amount).toFixed(this.state.valueDecimals).formatCurrency("");
                     item.key = RandomString.generate(16);
-                    item.status = "open";
+                    //item.status = "open";
 
                     item.str_amount = item.amount.toFixed(this.state.amountDecimals);
+                    item.str_price = item.price.toFixed(this.state.valueDecimals).formatCurrency("");
                     if (this.state.isPriceCurrency) {
-                        item.str_price = item.price.toFixed(this.state.valueDecimals).formatCurrency("");
+                        item.str_price = item.str_price.formatCurrency("");
                     }
                 }
             }
             this.calculateSum(ba_orders);
-            asks = asks.slice(0, 30);
-            bids = bids.slice(0, 30);
-            this.setState({asks, bids});
+
+            asks = asks.sort((a, b) =>
+                a.price > b.price
+            ).slice(-20);
+            bids = bids.sort((a, b) =>
+                a.price < b.price
+            ).slice(-20);
+            this.setState({
+                asks, bids
+            });
+        });
+    }
+
+    /**
+     *
+     * @param book
+     */
+    getTicker(book) {
+        axios.get("https://api.bitso.com/v3/ticker/", {
+            params: {book}
+        }).then(message => {
+            if (!message.data && !message.data.success) return;
+            const response = message.data;
+
+            const ticker = response.payload;
+            ticker.variation = (+ticker.last - +ticker.vwap);
+            ticker.variation_percent = ticker.variation / (+ticker.vwap);
+            let positive = ticker.variation > 0;
+            ticker.variation = Math.abs(ticker.variation);
+            ticker.variation_percent = Math.abs(ticker.variation_percent);
+
+            ticker.variation = ticker.variation.toFixed(this.state.valueDecimals);
+            if (this.state.isPriceCurrency) {
+                ticker.high = ticker.high.formatCurrency();
+                ticker.low = ticker.low.formatCurrency();
+                ticker.variation = ticker.variation.formatCurrency();
+            }
+            ticker.variation = (positive ? "+" : "-") + ticker.variation;
+            ticker.variation_percent = (positive ? "" : "-") + ticker.variation_percent.toFixed(2);
+            this.setState({ticker});
         });
     }
 
@@ -360,6 +389,8 @@ class BitsoExchange extends Component {
      * @param ba_orders
      */
     calculateSum(ba_orders) {
+        //If only pased asks or bids
+        if (ba_orders.length > 0 && ba_orders[0].price !== undefined) ba_orders = [ba_orders];
         for (let ba_order of ba_orders) {
             let sum = 0;
             for (let item of ba_order) {
@@ -383,14 +414,15 @@ class BitsoExchange extends Component {
                 <Container fluid className={"main"}>
                     <Row>
                         <LastTrades book={this.state.selectedBook} trades={this.state.trades}/>
-                        <Col md={"9"} className={"last-trades"}>
+                        <Col md={"9"} className={"orders"}>
                             <Chart/>
                             <Row>
-                                <Bids orders={this.state.bids}/>
-                                <Asks orders={this.state.asks}/>
+                                <Bids orders={this.state.bids} book={this.state.selectedBook}/>
+                                <Asks orders={this.state.asks} book={this.state.selectedBook}/>
                             </Row>
                         </Col>
                     </Row>
+                    <Markerts/>
                 </Container>
             </div>
         )

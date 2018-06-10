@@ -32,7 +32,7 @@ class Summary extends Component {
 
     render() {
         const {selectedBook, ticker} = this.props;
-        if (!selectedBook || !ticker) return "";
+        if (!selectedBook || !ticker) return "sdfasd";
         const book = selectedBook.replace("_", "/");
         const currencies = book.split("/");
         const currency_amount = currencies[0];

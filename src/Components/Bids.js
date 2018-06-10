@@ -14,8 +14,11 @@ class Bids extends Component {
      * Renders
      */
     render() {
-        const {orders} = this.props;
-        if (!orders) return "";
+        const {orders, book} = this.props;
+        if (!orders || !book) return "";
+        const currencies = book.split("_");
+        const currency_amount = currencies[0];
+        const currency_price = currencies[1];
         return (
             <Col md={"6"} className={"bids"}>
                 <div className={"table-header"}>
@@ -26,16 +29,16 @@ class Bids extends Component {
                     <tr>
                         <th></th>
                         <th>sum</th>
-                        <th><span className={"currency-amount"}>btc</span>monto</th>
-                        <th><span className={"currency-price"}>mxn</span>valor</th>
-                        <th><span className={"currency-price"}>mxn</span>precio</th>
+                        <th><span className={"currency-amount"}>{currency_amount}</span>monto</th>
+                        <th><span className={"currency-price"}>{currency_price}</span>valor</th>
+                        <th><span className={"currency-price"}>{currency_price}</span>precio</th>
                     </tr>
                     </thead>
                     <TransitionGroup component="tbody">
                         {
                             orders.map(order => {
-                                let zeros = order.str_amount.replace(/^[0-9.]+[^0]/g, "");
-                                let amount = order.str_amount.replace(/\.?[0]+$/g, "");
+                                const zeros = order.str_amount.replace(/^[0-9.]+[^0]/g, "");
+                                const amount = order.str_amount.replace(/\.?[0]+$/g, "");
                                 return (
                                     <CSSTransition key={order.key} timeout={700} classNames={"bid-flash"}>
                                         <tr>

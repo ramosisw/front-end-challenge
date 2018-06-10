@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Col, Table} from "reactstrap";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 import PropTypes from 'prop-types';
 import moment from "moment";
 
@@ -14,6 +15,7 @@ class LastTrades extends Component {
     constructor(props) {
         super(props);
     }
+
     /**
      * Renders view
      * @returns {*}
@@ -38,22 +40,24 @@ class LastTrades extends Component {
                         <th><span className={"currency-amount"}>{currency_amount}</span>MONTO</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {
-                        trades.map(trade => {
-                            let zeros = trade.amount.replace(/^[0-9.]+[^0]/g, "");
-                            let amount = trade.amount.replace(/\.?[0]+$/g, "");
-                            let flashClass = trade.flash ? `flash_${trade.maker_side}` : '';
-                            return (
-                                <tr key={trade.tid} className={trade.flash}>
-                                    <td>{moment(trade.created_at).format("H:mm:ss")}</td>
-                                    <td className={trade.maker_side}>{trade.price}</td>
-                                    <td>{amount}<span className={"zeros"}>{zeros}</span></td>
-                                </tr>
-                            )
-                        })
-                    }
-                    </tbody>
+                    <TransitionGroup component="tbody">
+                        {
+                            trades.map(trade => {
+                                let zeros = trade.amount.replace(/^[0-9.]+[^0]/g, "");
+                                let amount = trade.amount.replace(/\.?[0]+$/g, "");
+                                let flashClass = trade.flash ? `flash-${trade.maker_side}` : '';
+                                return (
+                                    <CSSTransition key={trade.tid} timeout={700} classNames={flashClass}>
+                                        <tr>
+                                            <td>{moment(trade.created_at).format("H:mm:ss")}</td>
+                                            <td className={trade.maker_side}>{trade.price}</td>
+                                            <td>{amount}<span className={"zeros"}>{zeros}</span></td>
+                                        </tr>
+                                    </CSSTransition>
+                                )
+                            })
+                        }
+                    </TransitionGroup>
                 </Table>
             </Col>
         );
