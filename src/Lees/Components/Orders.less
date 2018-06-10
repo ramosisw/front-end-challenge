@@ -46,8 +46,8 @@
 }
 
 .asks {
-  .table-header{
-    h2{
+  .table-header {
+    h2 {
       text-align: right;
     }
   }
@@ -61,4 +61,24 @@
     }
   }
 }
+
+.asks .table-header {
+  border-right: 4px solid;
+  border-color: var(--primary-accent);
+  &.sell{
+    border-color: var(--medium-red);
+    transition: border-color 500ms ease-in;
+  }
+}
+
+.bids .table-header {
+  border-left: 4px solid;
+  border-color: var(--primary-accent);
+  &.buy{
+    border-color: var(--medium-green);
+    transition: border-color 500ms ease-in;
+  }
+}
+
+
 

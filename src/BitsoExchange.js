@@ -38,7 +38,8 @@ class BitsoExchange extends Component {
             isPriceCurrency: false,
             lastPrice: "$ 0.00",
             tickerInterval: null,
-            ticker: null
+            ticker: null,
+            lastTradeSide: ""
         };
 
         this.onSelectBook = this.onSelectBook.bind(this);
@@ -190,6 +191,7 @@ class BitsoExchange extends Component {
         if (response.action) return console.log(response);
         switch (response.type) {
             case "trades":
+                let lastTradeSide = "";
                 for (let trade of response.payload) {
                     trade.r = (+trade.r).toFixed(this.state.valueDecimals);
                     trade.a = (+trade.a).toFixed(this.state.amountDecimals);
@@ -203,11 +205,13 @@ class BitsoExchange extends Component {
                         amount: trade.a,
                         flash: "flash"
                     });
+                    lastTradeSide = trade.t === 0 ? "buy" : "sell";
                 }
                 if (this.state.trades.length > 50) {
                     this.state.trades = this.state.trades.slice(0, 50);
                 }
                 this.setState({
+                    lastTradeSide,
                     lastPrice: this.state.trades[0].price,
                     trades: this.state.trades
                 });
@@ -415,8 +419,8 @@ class BitsoExchange extends Component {
                         <Col md={"9"} className={"orders"}>
                             <Chart/>
                             <Row>
-                                <Bids orders={this.state.bids} book={this.state.selectedBook}/>
-                                <Asks orders={this.state.asks} book={this.state.selectedBook}/>
+                                <Bids orders={this.state.bids} book={this.state.selectedBook} lastTradeSide={this.state.lastTradeSide}/>
+                                <Asks orders={this.state.asks} book={this.state.selectedBook} lastTradeSide={this.state.lastTradeSide}/>
                             </Row>
                         </Col>
                     </Row>

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {Col, Table} from "reactstrap";
+import PropTypes from 'prop-types';
 
 class Bids extends Component {
     /**
@@ -21,7 +22,7 @@ class Bids extends Component {
         const currency_price = currencies[1];
         return (
             <Col md={"6"} className={"bids"}>
-                <div className={"table-header"}>
+                <div className={"table-header " + this.props.lastTradeSide}>
                     <h2>posturas de compra</h2>
                 </div>
                 <Table>

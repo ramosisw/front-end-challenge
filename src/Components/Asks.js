@@ -22,7 +22,7 @@ class Asks extends Component {
         const currency_price = currencies[1];
         return (
             <Col md={"6"} className={"asks"}>
-                <div className={"table-header"}>
+                <div className={"table-header " + this.props.lastTradeSide}>
                     <h2>posturas de venta</h2>
                 </div>
                 <Table>
