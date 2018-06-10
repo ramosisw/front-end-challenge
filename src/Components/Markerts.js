@@ -16,7 +16,7 @@ class Markerts extends Component {
         return (
             <Col md={3} className={"col-md-3 float-left col-1 pl-0 pr-0 collapse width show"} id={"markerts"}>
                 <div id={"toggle"}>
-                    <span>mercados</span>
+                    <span></span>
                 </div>
             </Col>
         );
