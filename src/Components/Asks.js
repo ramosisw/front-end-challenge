@@ -23,7 +23,7 @@ class Asks extends Component {
         return (
             <Col md={"6"} className={"asks"}>
                 <div className={"table-header"}>
-                    <h2>posturas de venta</h2>
+                    <h2 className={"float-right"}>posturas de venta</h2>
                 </div>
                 <Table>
                     <thead>

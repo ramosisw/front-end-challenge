@@ -9,13 +9,14 @@
 # View [demo](https://ramosisw.github.io/front-end-challenge)
 
 # How to develop
+Please install this [extension](https://chrome.google.com/webstore/detail/nlfbmbojpeacfghkpbjhddihlkkiljbi) for google chrome to Allow-Control-Allow-Origin: *
 
 ## Clone project
 ```sh
 $ git clone https://github.com/ramoisw/front-end-challenge
 ```
 
-## Install dependences
+## Install dependencies
 
 ```sh
 $ npm install
@@ -28,4 +29,4 @@ run
 $ npm start
 ```
 and view on browser
-    []http://localhost:3000](http://localhost:3000)
+    [http://localhost:3000](http://localhost:3000)
