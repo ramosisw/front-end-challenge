@@ -43,8 +43,8 @@ class Asks extends Component {
                                 return (
                                     <CSSTransition key={order.key} timeout={700} classNames={"ask-flash"}>
                                         <tr>
-                                            <td>{order.str_price}</td>
-                                            <td className={"sell"}>{order.value}</td>
+                                            <td className={"sell"}>{order.str_price}</td>
+                                            <td>{order.value}</td>
                                             <td>{amount}<span className={"zeros"}>{zeros}</span></td>
                                             <td>{order.sum}</td>
                                             <td>-------------------</td>

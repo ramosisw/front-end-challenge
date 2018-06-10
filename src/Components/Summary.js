@@ -25,11 +25,19 @@ class Summary extends Component {
         this.onSelectBook = this.onSelectBook.bind(this);
     }
 
+    /**
+     * handle event when new book is selected
+     * @param book
+     */
     onSelectBook(book) {
         console.log(book);
         this.state.onSelectBook(book);
     }
 
+    /**
+     *
+     * @returns {*}
+     */
     render() {
         const {selectedBook, ticker} = this.props;
         if (!selectedBook || !ticker) return "";

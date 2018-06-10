@@ -45,8 +45,8 @@ class Bids extends Component {
                                             <td>-------------------</td>
                                             <td>{order.sum}</td>
                                             <td>{amount}<span className={"zeros"}>{zeros}</span></td>
-                                            <td className={"buy"}>{order.value}</td>
-                                            <td>{order.str_price}</td>
+                                            <td>{order.value}</td>
+                                            <td className={"buy"}>{order.str_price}</td>
                                         </tr>
                                     </CSSTransition>
                                 )
@@ -58,5 +58,9 @@ class Bids extends Component {
         );
     }
 }
+
+Bids.propTypes = {
+    orders: PropTypes.array.isRequired,
+};
 
 export default Bids;

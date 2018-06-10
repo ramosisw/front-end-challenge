@@ -18,8 +18,6 @@ import Markerts from "./Components/Markerts";
 
 
 class BitsoExchange extends Component {
-
-
     /**
      * Default constructor
      * @param props
@@ -75,7 +73,7 @@ class BitsoExchange extends Component {
     }
 
     /**
-     * Get ticker every 60 minutes
+     * Get ticker every 1 minute
      * @param book
      */
     tickerRegister(book) {
@@ -85,7 +83,7 @@ class BitsoExchange extends Component {
         }
         const tickerInterval = setInterval(() => {
             this.getTicker(book);
-        }, 1000);
+        }, 60 * 1000);
         this.getTicker(book);
         this.setState({tickerInterval});
     }
@@ -124,7 +122,7 @@ class BitsoExchange extends Component {
     }
 
     /**
-     *
+     * get decimals to fix on string value
      * @param currency
      * @returns {number}
      */
@@ -355,7 +353,7 @@ class BitsoExchange extends Component {
     }
 
     /**
-     *
+     * get ticker infor for summary component
      * @param book
      */
     getTicker(book) {
@@ -385,7 +383,7 @@ class BitsoExchange extends Component {
     }
 
     /**
-     *
+     * Calculate a sum of asks, bids or both
      * @param ba_orders
      */
     calculateSum(ba_orders) {
