@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "jest": "^23.1.0",
-    "codecov": "^3.0.2",
+    "codecov": "^3.7.1",
     "babel-jest": "^23.0.1",
     "react-test-renderer": "^16.4.0",
     "babel-polyfill": "^6.26.0",
